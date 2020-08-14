@@ -1,0 +1,6 @@
+SPACE Gorilla
+AIR Owl
+WATER Octopus
+FIRE Dragon
+ICE Mammoth
+LAND Panda
