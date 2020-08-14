@@ -1,7 +1,7 @@
 package com.geektrust.tameofthrones.utils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import com.geektrust.tameofthrones.models.Kingdom;
@@ -17,7 +17,7 @@ public class Output {
 
      private static List<String> outputList = new ArrayList<>();
 
-    public static List<String> displayResult(HashSet<Kingdom> map, Kingdom ruler, int minimumSubjects) {
+    public static List<String> displayResult(LinkedHashSet<Kingdom> map, Kingdom ruler, int minimumSubjects) {
         
         // check whether the subjects is greater then minimumSubjects pr not
         if (map.size() < minimumSubjects) {

@@ -1,7 +1,7 @@
 package com.geektrust.tameofthrones;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import com.geektrust.tameofthrones.dto.KingdomDTO;
@@ -13,10 +13,6 @@ import com.geektrust.tameofthrones.utils.InputParser;
 import com.geektrust.tameofthrones.utils.Output;
 import com.geektrust.tameofthrones.utils.ParseKingdomDetails;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
 public class Geektrust {
 
 	/**
@@ -29,13 +25,12 @@ public class Geektrust {
      * @param kings holds subjects of ruler
      */
 
-    @Autowired
     private static RulerService rulerService;
     
     private static List<KingdomDTO> kingdoms;
     private static List<Kingdom> kingdomDetails;
     private static HashMap<String, String> map;
-    private static HashSet<Kingdom> kings;
+    private static LinkedHashSet<Kingdom> kings;
     private static final String kingdomsFilePath = "./src/main/resources/fixtures/";
     private static final String RULER = "SPACE"; 
     private static final String kingdomsFileName = "KingdomDetails.txt";

@@ -43,3 +43,9 @@ it contains resources such as input files under inputs directory, output files u
 ## Tests
 
 The tests are present under test directory.
+
+# Run Command
+
+java -jar geektrust.jar <absolute_path_to_input_file>
+
+Note: geektrust.jar is located at root. The KingdomDetails.txt file is located under src/main/resources/fixtures/

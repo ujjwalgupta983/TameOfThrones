@@ -3,7 +3,7 @@ package com.geektrust.tameofthrones;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import com.geektrust.tameofthrones.models.Kingdom;
@@ -15,13 +15,11 @@ import com.geektrust.tameofthrones.utils.ParseKingdomDetailsTest;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 class GeektrustTests {
 
 	private List<Kingdom> kingdomList;
-	private static HashSet<Kingdom> subjects = new HashSet<>();
+	private static LinkedHashSet<Kingdom> subjects = new LinkedHashSet<>();
 	private static final int MINIMUMSUBJECTS = 3;
 	
 	@AfterAll

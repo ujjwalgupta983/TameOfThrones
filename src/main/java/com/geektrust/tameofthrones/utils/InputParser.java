@@ -1,16 +1,17 @@
 package com.geektrust.tameofthrones.utils;
 
+import com.geektrust.tameofthrones.dto.KingdomDTO;
+
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintStream;
+
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.geektrust.tameofthrones.dto.KingdomDTO;
 
 public class InputParser {
     /**
@@ -51,7 +52,12 @@ public class InputParser {
 
     private static KingdomDTO createKingdom(final String[] metadata) {
         final String kingdomName = metadata[0];
-        final String message = metadata[1];
+        int iterator = 1;
+        String message = "";
+        while (iterator != metadata.length) {
+            message = message + metadata[iterator];
+            iterator++;
+        }
         return new KingdomDTO(kingdomName, message);
     }
 }

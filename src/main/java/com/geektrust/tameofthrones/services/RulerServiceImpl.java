@@ -2,15 +2,13 @@ package com.geektrust.tameofthrones.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import com.geektrust.tameofthrones.dto.KingdomDTO;
 import com.geektrust.tameofthrones.models.Kingdom;
 import com.geektrust.tameofthrones.repositories.KingdomRepo;
 import com.geektrust.tameofthrones.utils.CaesarCipher;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.NoArgsConstructor;
 
@@ -26,18 +24,17 @@ public class RulerServiceImpl implements RulerService {
      * 
      */
 
-    @Autowired
     private KingdomRepo kingdomRepo;
 
     private List<Kingdom> kingdomList;
-    private HashSet<Kingdom> subjects;
+    private LinkedHashSet<Kingdom> subjects;
     private CaesarCipher cipher;
 
     // Dependency Injection Constructor
     public RulerServiceImpl(KingdomRepo kingdomRepoImpl) {
         this.kingdomRepo = kingdomRepoImpl;
         cipher = new CaesarCipher();
-        subjects = new HashSet<>();
+        subjects = new LinkedHashSet<>();
     }
 
     /**
@@ -76,7 +73,7 @@ public class RulerServiceImpl implements RulerService {
      * @return a set of kingdoms
      */
     @Override
-    public HashSet<Kingdom> getSubjects(List<Kingdom> kingdomList) {  
+    public LinkedHashSet<Kingdom> getSubjects(List<Kingdom> kingdomList) {  
         
         // @param flag to check whether the emblem is in message or not
         boolean flag = true;
