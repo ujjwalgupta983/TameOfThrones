@@ -18,15 +18,19 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class RulerServiceTest {
-    
+
+    /**
+     * RulerServiceTest is created to test the RulerService Class
+     * @param rulerService used to call RulerService Methods
+     * @param kingdomsList get data from ruler service
+     * @param map used to fetch kingdomDetails
+     * @return subjects  
+     */
     @InjectMocks
     private RulerService rulerService;
-    @Autowired
-    private KingdomRepo kingdomRepo;
 
     private List<KingdomDTO> kingdoms;
     private List<Kingdom> kingdomList;
-    private List<Kingdom> kingdomDetails;
     private HashSet<Kingdom> subjects;
     private HashMap<String, String> map;
     private final String inputFilePath = "src/test/resources/inputs/";
@@ -35,14 +39,17 @@ public class RulerServiceTest {
     private final String kingdomsFileName = "KingdomDetails.txt";
     private final String rulerKingdom = "SPACE";
 
-    void setup() {
+    public List<Kingdom> setup() {
+        // parse input
         kingdoms = InputParser.getData(inputFilePath + inputFileName);
+        // parse kingdom Details
         map = ParseKingdomDetails.getKingdomDetails(kingdomsFilePath + kingdomsFileName);
         rulerService = new RulerServiceImpl(new KingdomRepoImpl());
         kingdomList = rulerService.getKingdoms(kingdoms, map, rulerKingdom);
-        assertEquals("AIR", kingdomDetails.get(0).getKingdomName());
+        assertEquals("AIR", kingdomList.get(0).getKingdomName());
         kingdomList = rulerService.decryptMsg(kingdomList);
         assertEquals("OLWL",kingdomList.get(0).getMessage());
+        return kingdomList;
     }
 
     @Test
@@ -50,7 +57,6 @@ public class RulerServiceTest {
         kingdomList = this.kingdomList;
         subjects = rulerService.getSubjects(kingdomList);
         assertEquals(3, subjects.size());
-        assertEquals(true,subjects.contains("LAND"));
         return subjects;
     }
 }

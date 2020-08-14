@@ -15,7 +15,7 @@ public class InputParserTest {
      * @param fileName
      * @return list of list of Kingdom's DTO
      */
-    
+
     private final String filePath = "src/test/resources/inputs/";
     private final String fileName = "input1.txt";
     private final String emptyFileName = "input0.txt";
