@@ -4,8 +4,7 @@ plugins {
 	id 'java'
 }
 
-group = 'com.geektrust'
-version = '0.0.1-SNAPSHOT'
+group = 'GeekTrust'
 sourceCompatibility = '11'
 
 configurations {

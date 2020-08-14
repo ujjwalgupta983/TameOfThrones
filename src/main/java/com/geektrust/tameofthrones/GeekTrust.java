@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GeekTrust {
+public class Geektrust {
 
 	/**
      * Main java file
@@ -36,12 +36,13 @@ public class GeekTrust {
     private static List<Kingdom> kingdomDetails;
     private static HashMap<String, String> map;
     private static HashSet<Kingdom> kings;
-    private static final String kingdomsFilePath = "src/main/resources/fixtures/";
+    private static final String kingdomsFilePath = "./src/main/resources/fixtures/";
     private static final String RULER = "SPACE"; 
     private static final String kingdomsFileName = "KingdomDetails.txt";
     private static final int MINIMUMSUBJECTS = 3;
 
     public static void main(String[] args) {
+        
         // parsing input
         kingdoms = InputParser
             .getData(args[0]);
