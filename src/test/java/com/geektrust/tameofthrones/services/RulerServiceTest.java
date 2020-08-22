@@ -2,57 +2,103 @@ package com.geektrust.tameofthrones.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.geektrust.tameofthrones.dto.KingdomDto;
+import com.geektrust.tameofthrones.models.Kingdom;
+import com.geektrust.tameofthrones.models.Ruler;
+import com.geektrust.tameofthrones.utils.CaesarCipher;
+import com.geektrust.tameofthrones.utils.FileParser;
+import com.geektrust.tameofthrones.utils.Mapper;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.geektrust.tameofthrones.dto.KingdomDTO;
-import com.geektrust.tameofthrones.models.Kingdom;
-import com.geektrust.tameofthrones.repositories.KingdomRepoImpl;
-import com.geektrust.tameofthrones.utils.InputParser;
-import com.geektrust.tameofthrones.utils.ParseKingdomDetails;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RulerServiceTest {
+  
+  private IRulerService rulerService;
+  private FileParser fileParser;
+  private Mapper objectMapper;
 
-    /**
-     * RulerServiceTest is created to test the RulerService Class
-     * @param rulerService used to call RulerService Methods
-     * @param kingdomsList get data from ruler service
-     * @param map used to fetch kingdomDetails
-     * @return subjects  
-     */
-    private RulerService rulerService;
+  private final String filePath = "src\\test\\resources\\inputs\\";
+  private final String detailsPath = "src\\test\\resources\\fixtures\\KingdomDetails.txt";
 
-    private List<KingdomDTO> kingdoms;
-    private List<Kingdom> kingdomList;
-    private LinkedHashSet<Kingdom> subjects;
-    private HashMap<String, String> map;
-    private final String inputFilePath = "src/test/resources/inputs/";
-    private final String kingdomsFilePath = "src/test/resources/fixtures/";
-    private final String inputFileName = "input1.txt";
-    private final String kingdomsFileName = "KingdomDetails.txt";
-    private final String rulerKingdom = "SPACE";
+  @BeforeEach
+  void setup() throws Exception {
+    fileParser = new FileParser(new HashMap<>(), new ArrayList<Kingdom>());
+    objectMapper = new Mapper(new ArrayList<KingdomDto>(), new Ruler());
+    rulerService = new RulerService(new LinkedHashSet<>());
+  }
 
-    public List<Kingdom> setup() {
-        // parse input
-        kingdoms = InputParser.getData(inputFilePath + inputFileName);
-        // parse kingdom Details
-        map = ParseKingdomDetails.getKingdomDetails(kingdomsFilePath + kingdomsFileName);
-        rulerService = new RulerServiceImpl(new KingdomRepoImpl());
-        kingdomList = rulerService.getKingdoms(kingdoms, map, rulerKingdom);
-        assertEquals("AIR", kingdomList.get(0).getKingdomName());
-        kingdomList = rulerService.decryptMsg(kingdomList);
-        assertEquals("LTI",kingdomList.get(0).getMessage());
-        return kingdomList;
+  private LinkedHashSet<KingdomDto> getSubjects(List<KingdomDto> kingdoms) {
+    if (kingdoms == null) {
+      return null;
     }
+    return rulerService.getSubjects(kingdoms);
+  }
 
-    @Test
-    public LinkedHashSet<Kingdom> getSubjects(List<Kingdom> kingdomList) {       
-        kingdomList = this.kingdomList;
-        subjects = rulerService.getSubjects(kingdomList);
-        assertEquals(3, subjects.size());
-        return subjects;
+  @Test
+  void checkWhetherSubjectsAreValidOrNot() {
+    
+    LinkedHashSet<KingdomDto> subjects = getSubjects(loadKingdomsThatBelongsToRuler());
+    if (subjects != null) {
+      List<KingdomDto> subjectList = subjects.stream().collect(Collectors.toList());
+      assertEquals(3, subjects.size());
+      assertEquals("AIR", subjectList.get(0).getKingdomName());
+      assertEquals("LAND", subjectList.get(1).getKingdomName());
     }
+  }
+
+  @Test
+  void checkWhenNoSubjectsBelongsToRuler() {
+    LinkedHashSet<KingdomDto> subjects = getSubjects(loadKingdomsThatNotBelongsToRuler());
+    if (subjects != null) {
+      assertEquals(0, subjects.size());
+    }
+  }
+
+  private List<KingdomDto> loadKingdomsThatBelongsToRuler() {
+    
+    String inputFileName = "input1.txt";
+    HashMap<String, String> kingdomDetails = fileParser
+        .parseKingdomDetails(detailsPath);
+
+    List<Kingdom> kingdomList = fileParser.parseInput(filePath + inputFileName);
+    List<KingdomDto> kingdoms = objectMapper.mapSubjects(kingdomDetails, kingdomList);
+    if (kingdoms == null) {
+      return null;
+    }
+    CaesarCipher cipher = new CaesarCipher();
+    for (KingdomDto kingdomDto : kingdoms) {
+      String cipherText = kingdomDto.getMessage();
+      kingdomDto.setMessage(cipher.decrypt(cipherText,
+          kingdomDto.getEmblem().length()));
+    }
+    return kingdoms;
+  }
+
+  private List<KingdomDto> loadKingdomsThatNotBelongsToRuler() {
+    
+    String inputFileName = "input4.txt";
+    HashMap<String, String> kingdomDetails = fileParser
+        .parseKingdomDetails(detailsPath);
+
+    List<Kingdom> kingdomList = fileParser.parseInput(filePath + inputFileName);
+
+    List<KingdomDto> kingdoms = objectMapper.mapSubjects(kingdomDetails, kingdomList);
+    if (kingdoms == null) {
+      return null;
+    }
+    CaesarCipher cipher = new CaesarCipher();
+    for (KingdomDto kingdomDto : kingdoms) {
+      String cipherText = kingdomDto.getMessage();
+      kingdomDto.setMessage(cipher.decrypt(cipherText,
+          kingdomDto.getEmblem().length()));
+    }
+    return kingdoms;
+  }
 }
