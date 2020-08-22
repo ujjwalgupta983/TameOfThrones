@@ -9,6 +9,10 @@ import com.geektrust.tameofthrones.utils.CaesarCipher;
 import com.geektrust.tameofthrones.utils.FileParser;
 import com.geektrust.tameofthrones.utils.Mapper;
 
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -24,14 +28,20 @@ public class RulerServiceTest {
   private FileParser fileParser;
   private Mapper objectMapper;
 
-  private final String filePath = "src\\test\\resources\\inputs\\";
-  private final String detailsPath = "src\\test\\resources\\fixtures\\KingdomDetails.txt";
+  private final String filePath = "inputs/";
+  private final String detailsPath = "fixtures/KingdomDetails.txt";
 
   @BeforeEach
   void setup() throws Exception {
     fileParser = new FileParser(new HashMap<>(), new ArrayList<Kingdom>());
     objectMapper = new Mapper(new ArrayList<KingdomDto>(), new Ruler());
     rulerService = new RulerService(new LinkedHashSet<>());
+  }
+
+  private String getResourcePath(String filePath) throws URISyntaxException {
+    URL url = this.getClass().getClassLoader().getResource(filePath);
+    Path path = Paths.get(url.toURI());
+    return path.toString();
   }
 
   private LinkedHashSet<KingdomDto> getSubjects(List<KingdomDto> kingdoms) {
@@ -42,7 +52,7 @@ public class RulerServiceTest {
   }
 
   @Test
-  void checkWhetherSubjectsAreValidOrNot() {
+  void checkWhetherSubjectsAreValidOrNot() throws URISyntaxException {
     
     LinkedHashSet<KingdomDto> subjects = getSubjects(loadKingdomsThatBelongsToRuler());
     if (subjects != null) {
@@ -54,20 +64,21 @@ public class RulerServiceTest {
   }
 
   @Test
-  void checkWhenNoSubjectsBelongsToRuler() {
+  void checkWhenNoSubjectsBelongsToRuler() throws URISyntaxException {
     LinkedHashSet<KingdomDto> subjects = getSubjects(loadKingdomsThatNotBelongsToRuler());
     if (subjects != null) {
       assertEquals(0, subjects.size());
     }
   }
 
-  private List<KingdomDto> loadKingdomsThatBelongsToRuler() {
+  private List<KingdomDto> loadKingdomsThatBelongsToRuler() throws URISyntaxException {
     
-    String inputFileName = "input1.txt";
+    String fileName = "input1.txt";
+    String detailPath = getResourcePath(detailsPath);
     HashMap<String, String> kingdomDetails = fileParser
-        .parseKingdomDetails(detailsPath);
-
-    List<Kingdom> kingdomList = fileParser.parseInput(filePath + inputFileName);
+        .parseKingdomDetails(detailPath);
+    String inputPath = getResourcePath(filePath + fileName);
+    List<Kingdom> kingdomList = fileParser.parseInput(inputPath);
     List<KingdomDto> kingdoms = objectMapper.mapSubjects(kingdomDetails, kingdomList);
     if (kingdoms == null) {
       return null;
@@ -81,13 +92,14 @@ public class RulerServiceTest {
     return kingdoms;
   }
 
-  private List<KingdomDto> loadKingdomsThatNotBelongsToRuler() {
+  private List<KingdomDto> loadKingdomsThatNotBelongsToRuler() throws URISyntaxException {
     
-    String inputFileName = "input4.txt";
+    String fileName = "input4.txt";
+    String detailPath = getResourcePath(detailsPath);
     HashMap<String, String> kingdomDetails = fileParser
-        .parseKingdomDetails(detailsPath);
-
-    List<Kingdom> kingdomList = fileParser.parseInput(filePath + inputFileName);
+        .parseKingdomDetails(detailPath);
+    String inputPath = getResourcePath(filePath + fileName);
+    List<Kingdom> kingdomList = fileParser.parseInput(inputPath);
 
     List<KingdomDto> kingdoms = objectMapper.mapSubjects(kingdomDetails, kingdomList);
     if (kingdoms == null) {

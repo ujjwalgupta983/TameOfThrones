@@ -33,8 +33,6 @@ public class TameOfThrones {
   private FileParser fileParser;
   private List<KingdomDto> kingdoms;
   private Mapper mapper;
-  
-  private static final String detailsPath = "src\\main\\resources\\fixtures\\KingdomDetails.txt";
     
   public TameOfThrones(IRulerService rulerService, FileParser fileParser,
       Mapper mapper) {
@@ -48,8 +46,9 @@ public class TameOfThrones {
     Mapper mapper = new Mapper(new ArrayList<KingdomDto>(), new Ruler());
     TameOfThrones tameOfThrones = new TameOfThrones(
         new RulerService(new LinkedHashSet<>()), fileParser, mapper);
+    
     // method for parsing kingdomDetails and inputDetails
-    tameOfThrones.parseDetails(detailsPath, args[0]);
+    tameOfThrones.parseDetails(GlobalConstants.KINGDOM_DETAILS, args[0]);
 
     // method to preform business logic
     tameOfThrones.run();
@@ -58,6 +57,8 @@ public class TameOfThrones {
     tameOfThrones.printOutput();
   }
 
+  // this method gets the path of resources using classpath
+  
   /**
    * parseDetails method parses and maps details from input and kingdomDetails files.
    * @param detailsPath the path of the kingdomDetails file

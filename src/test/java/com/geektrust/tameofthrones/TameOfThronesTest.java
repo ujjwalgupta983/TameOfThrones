@@ -8,6 +8,10 @@ import com.geektrust.tameofthrones.services.RulerService;
 import com.geektrust.tameofthrones.utils.FileParser;
 import com.geektrust.tameofthrones.utils.Mapper;
 
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -22,8 +26,8 @@ public class TameOfThronesTest {
   private TameOfThrones tameOfThrones;
   private Ruler ruler;
 
-  private final String filePath = "src\\test\\resources\\inputs\\";
-  private final String detailsPath = "src\\test\\resources\\fixtures\\KingdomDetails.txt";
+  private final String filePath = "inputs/";
+  private final String detailsPath = "fixtures/KingdomDetails.txt";
 
   @BeforeEach
   void setup() throws Exception {
@@ -33,14 +37,21 @@ public class TameOfThronesTest {
       fileParser, mapper);
   }
 
-  private Ruler run(String fileName) {
+  private String getResourcePath(String filePath) throws URISyntaxException {
+    URL url = this.getClass().getClassLoader().getResource(filePath);
+    Path path = Paths.get(url.toURI());
+    return path.toString();
+  }
 
-    tameOfThrones.parseDetails(detailsPath, filePath + fileName);
+  private Ruler run(String fileName) throws URISyntaxException {
+    String detailPath = getResourcePath(detailsPath);
+    String inputPath = getResourcePath(filePath + fileName);
+    tameOfThrones.parseDetails(detailPath, inputPath);
     return tameOfThrones.run();
   }
 
   @Test
-  void subjectsAreGreaterThanSubjectsRequired() {
+  void subjectsAreGreaterThanSubjectsRequired() throws URISyntaxException {
     String fileName = "input1.txt";
     ruler = run(fileName);
     if (ruler.getSubjects() != null) {
@@ -55,7 +66,7 @@ public class TameOfThronesTest {
   }
 
   @Test
-  void subjectsAreLessThanSubjectsRequired() {
+  void subjectsAreLessThanSubjectsRequired() throws URISyntaxException {
     String fileName = "input2.txt";
     ruler = run(fileName);    
     if (ruler.getSubjects() != null) {
@@ -65,7 +76,7 @@ public class TameOfThronesTest {
   }
 
   @Test
-  void inputFileIsEmptyOrNotValid() {
+  void inputFileIsEmptyOrNotValid() throws URISyntaxException {
     String fileName = "input0.txt";
     ruler = run(fileName);    
     
